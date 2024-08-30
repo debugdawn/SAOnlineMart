@@ -1,0 +1,139 @@
+﻿@model Product
+
+@section title {
+    <h3>Product Details</h3>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Url.Content("~/images/" + Model.Name + ".jpg")" class="img-fluid" alt="@Model.Name">
+        </div>
+
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p>@Model.Description</p>
+            <p>Price: R @Model.Price</p>
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control" style="width: 100px;" />
+            </div>
+            <button id="add-to-cart-btn" class="btn btn-primary">Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<!-- Shopping Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+    <h2>My Shopping Cart</h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-total">Total: R0.00</div>
+    <button id="checkout-btn" class="btn btn-success">Checkout Now</button>
+    <a class="close-btn btn btn-secondary" id="close-btn">Continue Shopping</a>
+</div>
+
+<!-- JavaScript for Cart Functionality -->
+<script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+        const product = {
+            id: @Model.ProductId,
+            name: "@Model.Name",
+            price: parseFloat(@Model.Price),
+            image: "@Url.Content("~/images/" + Model.Name + ".jpg")",
+            quantity: parseInt(document.getElementById('quantity').value)
+        };
+        addToCart(product);
+        updateCart();
+    });
+
+    function addToCart(product) {
+        const existingProduct = cart.find(item => item.id === product.id);
+        if (existingProduct) {
+            existingProduct.quantity += product.quantity;
+        } else {
+            cart.push(product);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCart() {
+        const cartItemsElement = document.getElementById('cart-items');
+        cartItemsElement.innerHTML = '';
+
+        cart.forEach(product => {
+            const li = document.createElement('li');
+
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.name;
+
+            const detailsDiv = document.createElement('div');
+            detailsDiv.classList.add('product-details');
+
+            const nameDiv = document.createElement('div');
+            nameDiv.textContent = product.name;
+
+            const priceDiv = document.createElement('div');
+            priceDiv.classList.add('product-price');
+            priceDiv.textContent = `R${product.price.toFixed(2)}`;
+
+            const quantityControls = document.createElement('div');
+            quantityControls.classList.add('quantity-controls');
+
+            const decreaseBtn = document.createElement('button');
+            decreaseBtn.textContent = '-';
+            decreaseBtn.addEventListener('click', () => {
+                product.quantity -= 1;
+                if (product.quantity <= 0) {
+                    cart.splice(cart.indexOf(product), 1);
+                }
+                updateCart();
+            });
+
+            const quantitySpan = document.createElement('span');
+            quantitySpan.textContent = product.quantity;
+
+            const increaseBtn = document.createElement('button');
+            increaseBtn.textContent = '+';
+            increaseBtn.addEventListener('click', () => {
+                product.quantity += 1;
+                updateCart();
+            });
+
+            quantityControls.appendChild(decreaseBtn);
+            quantityControls.appendChild(quantitySpan);
+            quantityControls.appendChild(increaseBtn);
+
+            detailsDiv.appendChild(nameDiv);
+            detailsDiv.appendChild(priceDiv);
+            detailsDiv.appendChild(quantityControls);
+
+            li.appendChild(img);
+            li.appendChild(detailsDiv);
+
+            cartItemsElement.appendChild(li);
+        });
+
+        const total = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
+        document.getElementById('cart-total').textContent = `Total: R${total.toFixed(2)}`;
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    document.getElementById('cart-icon').addEventListener('click', () => {
+        document.getElementById('cart-sidebar').classList.add('active');
+    });
+
+    document.getElementById('close-btn').addEventListener('click', () => {
+        document.getElementById('cart-sidebar').classList.remove('active');
+    });
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        window.location.href = '@Url.Action("Checkout", "Cart")';
+    });
+
+    updateCart();
+</script>
+

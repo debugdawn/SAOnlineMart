@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SA Online Mart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: #FFFFF0;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #708090;
+            font-size: 40px;
+        }
+
+        h4 {
+            text-align: center;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: rgb(65,105,225);
+            font-family: 'Abril Fatface';
+            font-size: 22px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 1000;
+        }
+
+            .topnav .logo {
+                margin-right: auto;
+                color: black;
+                text-decoration: none;
+            }
+
+            .topnav .right-nav {
+                display: flex;
+                align-items: center;
+            }
+
+            .topnav #myLinks {
+                display: none;
+                position: relative;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                top: 20px;
+                right: 10px;
+                width: 100%;
+            }
+
+            .topnav a {
+                color: black;
+                padding: 14px 16px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 17px;
+                display: block;
+            }
+
+                .topnav a.icon {
+                    font-family: Georgia, 'Times New Roman', Times, serif;
+                    margin-right: 20px;
+                    background: #38B6FF;
+                    display: block;
+                    position: absolute;
+                    left: 10px;
+                    top: 0;
+                }
+
+                .topnav a:hover {
+                    background-color: white;
+                    color: black;
+                }
+
+        .hero {
+            height: 70vh;
+            width: 100%;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            text-align: right;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            color: white;
+            padding-right: 20px;
+            z-index: 2;
+        }
+
+        .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .category {
+            width: 30%;
+            margin-bottom: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .category img {
+                width: 100%;
+                height: auto;
+                border-radius: 10px;
+                transition: transform 0.3s ease;
+            }
+
+            .category h3 {
+                margin-top: 10px;
+                font-size: 1.2em;
+                color: #333;
+            }
+
+            .category a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            .category img:hover {
+                transform: scale(1.05);
+            }
+
+
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #F0FFF0;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="topnav">
+            <a class="logo" href="/">SA Online Mart</a>
+            <div class="right-nav">
+                <a class="nav-link" href="/home/index">Home</a>
+                <a class="nav-link" href="/shop/index">Products</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="pb-3">
+            @RenderSection("title")
+            <hr />
+        </div>
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; SA Online Mart</p>
+    </footer>
+</body>
+
+</html>
